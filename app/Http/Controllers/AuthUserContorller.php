@@ -15,7 +15,6 @@ class AuthUserContorller extends Controller
 
     public function register(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' =>  ['required', 'string', 'unique:users', 'max:255', 'email'],
@@ -24,7 +23,7 @@ class AuthUserContorller extends Controller
 
         if ($validator->fails()) {
 
-            return Response::json($validator->errors());
+            return Response::json($validator->errors(), 400);
         }
 
         User::create([
@@ -36,10 +35,7 @@ class AuthUserContorller extends Controller
         $user = User::query()->firstOrFail();
         $token = JWTAuth::fromUser($user);
 
-        return Response::json([
-            'data' => compact('token'),
-            'success' => 'user created successfully'
-        ]);
+        return Response::json(compact('token'), 200);
     }
 
     public function login(Request $request)
@@ -53,7 +49,7 @@ class AuthUserContorller extends Controller
 
         if ($validator->fails()) {
 
-            return Response::json($validator->errors());
+            return Response::json($validator->errors(), 400);
         }
 
         $credentials = $request->only('email', 'password');
@@ -68,9 +64,6 @@ class AuthUserContorller extends Controller
             return Response::json(['error' => 'could not create token'], [500]);
         }
 
-        return response()->json([
-            'data' => compact('token'),
-            'message' => 'welcome back!!'
-        ]);
+        return response()->json(compact('token'), 200);
     }
 }

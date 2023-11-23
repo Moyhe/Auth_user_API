@@ -39,4 +39,8 @@ From now on whenever you want to run artisan command you should do this from the
 
     php artisan migrate
 
+7.Test the Application, run this command
+
+        php artisan test
+
 7.use postman to test the API
