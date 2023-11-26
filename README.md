@@ -12,11 +12,11 @@ You have to register first in order to generate access token and make API reques
 
 Navigate into project folder using terminal and run
 
-    docker run --rm
-    -u "$(id -u):$(id -g)"
-    -v "$(pwd):/var/www/html"
-    -w /var/www/html
-    laravelsail/php82-composer:latest
+    docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    laravelsail/php82-composer:latest \
     composer install --ignore-platform-reqs
 
 3-Copy .env.example into .env
