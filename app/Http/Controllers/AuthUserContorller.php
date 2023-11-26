@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -79,8 +80,6 @@ class AuthUserContorller extends Controller
     public function register(Request $request)
     {
 
-
-
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' =>  ['required', 'string', 'unique:users', 'max:255', 'email'],
@@ -98,8 +97,10 @@ class AuthUserContorller extends Controller
             'password' => Hash::make(request('password')),
         ]);
 
+
         $user = User::query()->firstOrFail();
         $token = JWTAuth::fromUser($user);
+
 
         return Response::json(compact('token'), 200);
     }
@@ -184,6 +185,8 @@ class AuthUserContorller extends Controller
             return Response::json(['error' => 'could not create token'], [500]);
         }
 
-        return response()->json(compact('token'), 200);
+        $user_id = auth()->user()->id;
+
+        return response()->json(compact('token', 'user_id'), 200);
     }
 }
