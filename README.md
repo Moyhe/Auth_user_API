@@ -43,4 +43,6 @@ From now on whenever you want to run artisan command you should do this from the
 
     php artisan test
 
-8.use postman to test the API
+8 to generate jwt secret use this command
+
+    ./vendor/bin/sail artisan jwt:secret
