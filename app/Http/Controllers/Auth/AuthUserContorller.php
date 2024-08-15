@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -188,5 +190,15 @@ class AuthUserContorller extends Controller
         $user_id = auth()->user()->id;
 
         return response()->json(compact('token', 'user_id'), 200);
+    }
+
+
+
+    public function logout(Request $request)
+    {
+        $user = $request->user();
+        $user->currentAccessToken()->delete();
+
+        return response('', 204);
     }
 }
