@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -85,7 +86,7 @@ class AuthUserContorller extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' =>  ['required', 'string', 'unique:users', 'max:255', 'email'],
-            'password' => ['required']
+            'password' => ['required', Password::defaults()->min(8), 'confirmed']
         ]);
 
         if ($validator->fails()) {
@@ -104,7 +105,7 @@ class AuthUserContorller extends Controller
         $token = JWTAuth::fromUser($user);
 
 
-        return Response::json(compact('token'), 200);
+        return Response::json(compact('user', 'token'), 200);
     }
 
 

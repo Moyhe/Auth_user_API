@@ -21,8 +21,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/users', function () {
-    return auth()->user();
+Route::middleware('auth:api')->group(function () {
 
     Route::get('verify-email/{id}/{hash}', EmailVerificationController::class)
         ->middleware(['signed'])
@@ -34,7 +33,7 @@ Route::middleware('auth:api')->get('/users', function () {
 
     Route::post('confirm-password', ConfirmePasswordController::class);
 
-    Route::post('/logout', [AuthUserContorller::class, 'logout']);
+    Route::post('logout', [AuthUserContorller::class, 'logout']);
 });
 
 
