@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 
@@ -167,7 +169,7 @@ class AuthUserContorller extends Controller
         $validator = Validator::make($request->all(), [
 
             'email' =>  ['required', 'string', 'max:255', 'email'],
-            'password' => 'required'
+            'password' => ['required', Password::defaults()->min(8)]
 
         ]);
 
@@ -195,11 +197,16 @@ class AuthUserContorller extends Controller
 
 
 
-    public function logout(Request $request)
+    public function logout()
     {
-        $user = $request->user();
-        $user->currentAccessToken()->delete();
+        try {
+            JWTAuth::invalidate(JWTAuth::getToken());
 
-        return response('', 204);
+            return response()->json(['message' => 'Successfully logged out']);
+        } catch (TokenInvalidException $e) {
+            return response()->json(['error' => 'Failed to logout, token invalid'], 500);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Failed to logout'], 500);
+        }
     }
 }
