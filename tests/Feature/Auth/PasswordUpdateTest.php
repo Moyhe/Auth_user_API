@@ -6,15 +6,14 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
+use Tests\Feature\Traits\JwtAuthTrait;
 use Tests\TestCase;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class PasswordUpdateTest extends TestCase
 {
-    use RefreshDatabase;
-    /**
-     * A basic feature test example.
-     */
+    use RefreshDatabase, JwtAuthTrait;
+
     public function test_user_can_update_his_password(): void
     {
         $user = User::factory()->create();
@@ -30,15 +29,5 @@ class PasswordUpdateTest extends TestCase
         $resposne->assertOk();
 
         $this->assertTrue(Hash::check('new-password', $user->refresh()->password));
-    }
-
-
-    protected function jwtAs(User $user)
-    {
-        $token = JWTAuth::fromUser($user);
-
-        $this->withHeaders(['Authorization' => 'Bearer ' . $token]);
-
-        return $this;
     }
 }

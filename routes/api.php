@@ -22,17 +22,18 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->group(function () {
 
+    Route::post('/verify', VerifyEmailController::class)->name('verification.send');
+
     Route::get('verify-email/{id}/{hash}', EmailVerificationController::class)
         ->middleware(['signed'])
         ->name('verification.verify');
 
-    Route::post('/verify', VerifyEmailController::class)->name('verification.send');
+
+    Route::post('confirm-password', ConfirmePasswordController::class)->name('password.confirm');
 
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
-    Route::post('confirm-password', ConfirmePasswordController::class);
-
-    Route::post('logout', [AuthUserContorller::class, 'logout']);
+    Route::post('logout', [AuthUserContorller::class, 'logout'])->name('logout');
 });
 
 

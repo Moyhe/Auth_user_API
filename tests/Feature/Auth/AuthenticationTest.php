@@ -6,25 +6,24 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
+use Tests\Feature\Traits\JwtAuthTrait;
 use Tests\TestCase;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
-class LoginTest extends TestCase
+class AuthenticationTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, JwtAuthTrait;
 
     public function test_making_a_login_api_request(): void
     {
 
-        User::create([
-            'name' => 'mohye',
+        User::factory()->create([
             'email' => 'mohye@gmail.com',
-            'password' => Hash::make('12345678'),
-            'password_confirmation' => Hash::make('12345678')
         ]);
 
         $userRegister = [
             'email' => 'mohye@gmail.com',
-            'password' => "12345678"
+            'password' => "password"
         ];
 
         $response = $this->postJson(route('api.login'), $userRegister);
@@ -32,5 +31,16 @@ class LoginTest extends TestCase
         $response->assertStatus(200);
 
         $this->assertArrayHasKey('token', $response->json());
+    }
+
+    public function test_user_to_logout()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->jwtAs($user)->postJson(route('logout'));
+
+        $response->assertOk();
+
+        $this->assertArrayHasKey('message', $response->json());
     }
 }

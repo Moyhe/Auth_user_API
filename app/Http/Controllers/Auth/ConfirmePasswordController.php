@@ -18,13 +18,13 @@ class ConfirmePasswordController extends Controller
         ]);
 
         if (! Hash::check($request->password, Auth::user()->password)) {
-            return response()->json(['message' => 'your password is wrong please try again...']);
+            return response()->json(['message' => 'your password is wrong please try again...'], 400);
         }
 
 
         return response()->json([
             'auth.password_confirmed_at' => time(),
             'message' => 'your password was confirmted. thanks for waiting...'
-        ]);
+        ], 200);
     }
 }
