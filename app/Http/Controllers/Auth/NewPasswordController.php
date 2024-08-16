@@ -34,9 +34,9 @@ class NewPasswordController extends Controller
         );
 
         if ($status == Password::PASSWORD_RESET) {
-            return response()->json(['status' =>  __($status)]);
+            return response()->json(['status' =>  __($status)], 200);
         }
 
-        return response()->json(['email' => [trans($status)]]);
+        return response()->json(['email' => [trans($status)]], 400);
     }
 }

@@ -2,10 +2,11 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Models\User;
-use Illuminate\Auth\Notifications\ResetPassword;
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\User;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
@@ -25,5 +26,32 @@ class PasswordResetTest extends TestCase
         $response->assertOk();
 
         Notification::assertSentTo($user, ResetPassword::class);
+    }
+
+
+    public function test_password_can_be_rest_with_valid_token()
+    {
+        Notification::fake();
+
+        $user = User::factory()->create();
+
+        $this->postJson(route('password.forget'), ['email' => $user->email]);
+
+        Notification::assertSentTo($user, ResetPassword::class, function ($notification) use ($user) {
+            $response = $this->postJson(route('password.reset'), [
+                'token' => $notification->token,
+                'email' => $user->email,
+                'password' => 'password',
+                'password_confirmation' => 'password',
+            ]);
+
+            $response->assertOk();
+
+            $this->assertArrayHasKey('status', $response->json());
+
+            $response->assertSessionHasNoErrors();
+
+            return true;
+        });
     }
 }
