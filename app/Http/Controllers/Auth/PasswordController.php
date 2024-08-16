@@ -25,6 +25,6 @@ class PasswordController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return response()->json(['message', 'your password was updated']);
+        return response()->json(['message' => 'your password was updated'], 200);
     }
 }

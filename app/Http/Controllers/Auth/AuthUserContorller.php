@@ -77,9 +77,7 @@ class AuthUserContorller extends Controller
             return Response::json(['error' => 'could not create token'], [500]);
         }
 
-        $user_id = auth()->user()->id;
-
-        return response()->json(compact('token', 'user_id'), 200);
+        return response()->json(compact('token'), 200);
     }
 
 
