@@ -39,10 +39,10 @@ From now on whenever you want to run artisan command you should do this from the
 
     php artisan migrate
 
-7.Test the Application, run this command
-
-    php artisan test
-
-8 to generate jwt secret use this command
+7.to generate jwt secret use this command
 
     ./vendor/bin/sail artisan jwt:secret
+
+8.Test the Application, run this command
+
+    php artisan test
