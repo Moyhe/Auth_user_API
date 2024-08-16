@@ -4,6 +4,8 @@ COPY . .
 
 RUN apk update
 
+RUN docker-php-ext-install sockets
+
 # Install the `npm` package
 RUN apk add --no-cache npm
 
